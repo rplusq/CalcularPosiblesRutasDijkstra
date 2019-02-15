@@ -12,13 +12,10 @@ package caminosproyecto;
 public class Dijkstra {
 
     private int[][] matrizDistancias;
-    private String ruta;
     private String[] rutas = new String[10];
     private int numRutas = 0;
 
     public Dijkstra() {
-        // Se inicia el string
-        this.ruta = "";
         // Inicio matriz de 5*5
         this.matrizDistancias = new int[5][5];
 
@@ -39,13 +36,14 @@ public class Dijkstra {
         this.mostrarMatriz();
 
         // Buscar todas las rutas y guardarlas en this.rutas del nodo 0 al 4
-        this.calcularRutasDeNodos(0, 4);
+        this.calcularRutasDeNodos(0, 4, "0, ");
 
         int index = 0;
 
-        while (this.rutas[index] != "") {
+        while (this.rutas[index] != null) {
             String indexS = String.valueOf(index + 1);
             System.out.println("Ruta " + indexS + ": " + this.rutas[index]);
+            index++;
         }
     }
 
@@ -66,23 +64,18 @@ public class Dijkstra {
         }
     }
 
-    public void calcularRutasDeNodos(int nodoInicial, int nodoFinal) {
-
-        for (int i = nodoInicial; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                if (this.matrizDistancias[i][j] != -1) {
-                    if (j == nodoFinal) {
-                        System.out.println("Final en " + i + " " + j);
-
-                        this.ruta = this.ruta + j + " ,";
-                        this.rutas[this.numRutas] = this.ruta;
-                        this.ruta = "";
-                        return;
-                    } else {
-                        System.out.println("Un no null en " + i + " " + j);
-                        this.ruta = this.ruta + j + " ,";
-                        this.calcularRutasDeNodos(j, nodoFinal);
-                    }
+    public void calcularRutasDeNodos(int nodoInicial, int nodoFinal, String ruta) {
+        for (int j = 0; j < 5; j++) {
+            if (this.matrizDistancias[nodoInicial][j] != -1) {
+                if (j != nodoFinal) {
+                    String rutaAux = ruta + j + " ,";
+                    this.calcularRutasDeNodos(j, nodoFinal, rutaAux);
+                } else {
+                    System.out.println("Final en " + nodoInicial + " " + j);
+                    ruta += " " + j;
+                    this.rutas[this.numRutas] = ruta;
+                    this.numRutas++;
+                    return;
                 }
             }
         }
